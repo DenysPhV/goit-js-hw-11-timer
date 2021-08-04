@@ -1,10 +1,3 @@
-// new CountdownTimer({
-//   selector: '#timer-1',
-//   targetDate: new Date('Jul 17, 2019'),
-// });
-
-// =================== ПРАКТИКА ПО ВЕБИНАРУ РЕПЕТЫ =================
-
 const refs = {
   secs: document.querySelector('[data-value="secs"]'),
   mins: document.querySelector('[data-value="mins"]'),
@@ -12,22 +5,43 @@ const refs = {
   days: document.querySelector('[data-value="days"]'),
 };
 
-// создает таймер
-const timer = {
+class CountdownTimer {
+  constructor({ onTick, targetDate, selector }) {
+    this.targetDate = targetDate;
+    // this.selector = selector;
+    this.onTick = onTick;
+  }
+
   start() {
-    const startTime = Date.now();
+    this.targetDate = new Date(this.targetDate).getTime();
 
     setInterval(() => {
       const currentTime = Date.now();
-      const deltaTime = currentTime - startTime;
-      const { days, hours, mins, secs } = getTimeComponents(deltaTime);
-      addClockElement({ days, hours, mins, secs });
-      //   console.log(`${days}:${hours}:${mins}:${secs}`);
+      const deadLine = this.targetDate - currentTime;
+      const time = this.getTimeComponents(deadLine);
+      this.onTick(time);
     }, 1000);
-  },
-};
+  }
 
-timer.start();
+  getTimeComponents(time) {
+    const days = this.pad(Math.floor(time / (1000 * 60 * 60 * 24)));
+    const hours = this.pad(Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
+    const mins = this.pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
+    const secs = this.pad(Math.floor((time % (1000 * 60)) / 1000));
+
+    return { days, hours, mins, secs };
+  }
+
+  pad(value) {
+    return String(value).padStart(2, '0');
+  }
+}
+
+const timer = new CountdownTimer({
+  onTick: addClockElement,
+  selector: '#timer-1',
+  targetDate: new Date('Dec 31 2021'),
+});
 
 function addClockElement({ days, hours, mins, secs }) {
   refs.secs.textContent = `${secs}`;
@@ -36,19 +50,51 @@ function addClockElement({ days, hours, mins, secs }) {
   refs.days.textContent = `${days}`;
 }
 
-function pad(value) {
-  return String(value).padStart(2, '0');
-}
+timer.start();
+// =================== ПРАКТИКА ПО ВЕБИНАРУ РЕПЕТЫ =================
 
-// функция для переменных которая считает и переводит милисекунды в нормальное время
-function getTimeComponents(time) {
-  const days = pad(Math.floor(time / (1000 * 60 * 60 * 24)));
-  const hours = pad(Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
-  const mins = pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
-  const secs = pad(Math.floor((time % (1000 * 60)) / 1000));
+// const refs = {
+//   secs: document.querySelector('[data-value="secs"]'),
+//   mins: document.querySelector('[data-value="mins"]'),
+//   hours: document.querySelector('[data-value="hours"]'),
+//   days: document.querySelector('[data-value="days"]'),
+// };
 
-  return { days, hours, mins, secs };
-}
+// // создает таймер
+// const timer = {
+//   start() {
+//     const targetDate = new Date('Dec 31 2021');
 
-const deadline = new Date(Date.parse(new Date()) + 15 * 24 * 60 * 60 * 1000);
-console.log(deadline);
+//     setInterval(() => {
+//       const currentTime = Date.now();
+//       const deltaTime = targetDate - currentTime;
+//       const time = getTimeComponents(deltaTime);
+//       addClockElement(time);
+//       //   console.log(`${days}:${hours}:${mins}:${secs}`);
+//     }, 1000);
+//   },
+// };
+
+// timer.start();
+
+// function addClockElement({ days, hours, mins, secs }) {
+//   refs.secs.textContent = `${secs}`;
+//   refs.mins.textContent = `${mins}`;
+//   refs.hours.textContent = `${hours}`;
+//   refs.days.textContent = `${days}`;
+// }
+
+// function pad(value) {
+//   return String(value).padStart(2, '0');
+// }
+
+// // функция для переменных которая считает и переводит милисекунды в нормальное время
+
+// function getTimeComponents(time) {
+//   const days = pad(Math.floor(time / (1000 * 60 * 60 * 24)));
+//   const hours = pad(Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
+//   const mins = pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
+//   const secs = pad(Math.floor((time % (1000 * 60)) / 1000));
+
+//   return { days, hours, mins, secs };
+// }
