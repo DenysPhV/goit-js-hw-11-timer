@@ -39,13 +39,13 @@ const timer1 = new CountdownTimer({
   targetDate: new Date('Dec 31 2021'),
 });
 
-const timer2 = new CountdownTimer({
-  selector: '#timer-2',
-  targetDate: new Date('Nov 3 2021'),
-});
+// const timer2 = new CountdownTimer({
+//   selector: '#timer-2',
+//   targetDate: new Date('Nov 3 2021'),
+// });
 
 timer1.start();
-timer2.start();
+// timer2.start();
 
 /*
 Alona Harnyk
