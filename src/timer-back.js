@@ -2,6 +2,7 @@ class CountdownTimer {
   constructor({ targetDate, selector }) {
     this.targetDate = targetDate;
     this.selector = selector;
+    this.arrSpanClass = document.querySelector(this.selector).querySelectorAll('.value');
   }
 
   start() {
@@ -22,10 +23,10 @@ class CountdownTimer {
     const mins = this.pad(Math.floor((time % (1000 * 60 * 60)) / (1000 * 60)));
     const secs = this.pad(Math.floor((time % (1000 * 60)) / 1000));
 
-    document.querySelector('[data-value="secs"]').textContent = `${secs}`;
-    document.querySelector('[data-value="mins"]').textContent = `${mins}`;
-    document.querySelector('[data-value="hours"]').textContent = `${hours}`;
-    document.querySelector('[data-value="days"]').textContent = `${days}`;
+    const arrDate = [days, hours, mins, secs];
+    this.arrSpanClass.forEach((span, i) => {
+      span.textContent = arrDate[i];
+    });
   }
 
   pad(value) {
@@ -33,12 +34,18 @@ class CountdownTimer {
   }
 }
 
-const timer = new CountdownTimer({
+const timer1 = new CountdownTimer({
   selector: '#timer-1',
   targetDate: new Date('Dec 31 2021'),
 });
 
-timer.start();
+const timer2 = new CountdownTimer({
+  selector: '#timer-2',
+  targetDate: new Date('Nov 3 2021'),
+});
+
+timer1.start();
+timer2.start();
 
 /*
 Alona Harnyk
